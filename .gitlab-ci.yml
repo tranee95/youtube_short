@@ -1,0 +1,90 @@
+stages:
+  - build
+  - test
+  - push
+  - deploy
+
+build:
+  image: mcr.microsoft.com/dotnet/core/sdk:3.1
+  stage: build
+  only:
+    - master
+    - develop
+    - tags
+  script:
+    - cd viTouch
+    - dotnet restore viTouch.csproj
+    - dotnet build viTouch.csproj
+
+test:
+  image: mcr.microsoft.com/dotnet/core/sdk:3.1
+  stage: test
+  script:
+    - cd DomainTests
+    - dotnet test
+
+push:
+  image: docker:stable
+  stage: push
+  only:
+    - master
+    - develop
+    - tags
+  services:
+    - docker:dind
+  script:
+    - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_TAG-$CI_COMMIT_REF_SLUG} .
+    - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_TAG-$CI_COMMIT_REF_SLUG}
+    - docker logout ${CI_REGISTRY}
+    - docker system prune -a -f
+
+deploy:
+  image: ubuntu
+  stage: deploy
+
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+    - eval $(ssh-agent -s)
+
+    ##
+    ## Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+    ## We're using tr to fix line endings which makes ed25519 keys work
+    ## without extra base64 encoding.
+    ## https://gitlab.com/gitlab-examples/ssh-private-key/issues/1#note_48526556
+    ##
+    - echo "${SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add -
+
+    ##64
+    ## Create the SSH directory and give it the right permissions
+    ##
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+    ##
+    ## Use ssh-keyscan to scan the keys of your private server. Replace gitlab.com
+    ## with your own domain name. You can copy and repeat that command if you have
+    ## more than one server to connect to.
+    ##
+    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - |
+      cat > deploy.sh <<EOF
+      set -e
+      docker login registry.gitlab.com 
+      docker kill \$(docker ps -q) || echo 'kill command has erorrs'
+      docker rmi \$(docker images -a -q) --force || echo 'rmi command has erorrs'
+      echo "$CI_REGISTRY/$CI_PROJECT_PATH:${CI_COMMIT_TAG-$CI_COMMIT_REF_SLUG}"
+      docker run -d -p 8080:80 -t "$CI_REGISTRY/$CI_PROJECT_PATH:${CI_COMMIT_TAG-$CI_COMMIT_REF_SLUG}" --name vitouch_back \
+      -e ASPNETCORE_ENVIRONMENT = "Production"
+      exit 0
+      EOF
+
+    - ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} -p ${SSH_PORT} -tt "/bin/bash -s " < deploy.sh
+    
+  only:
+    - master
+    - develop
+    - schedules

@@ -1,0 +1,208 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        body {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            z-index: 999999;
+        }
+
+        iframe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            z-index: 999999;
+        }
+    </style>
+</head>
+<body>
+<script src="https://player.twitch.tv/js/embed/v1.js"></script>
+<div id="player"></div>
+<script type="text/javascript">
+
+    var WizViewMessenger = function () {
+    };
+
+    WizViewMessenger.prototype.postMessage = function (message, targetView) {
+// for more information on the MessageEvent API, see:
+// http://www.w3.org/TR/2008/WD-html5-20080610/comms.HTMLElement
+
+// wizPostMessage://origin?target?data
+
+// Check message type
+        var type;
+        if (Object.prototype.toString.call(message) === "[object Array]") {
+            type = "Array";
+            message = JSON.stringify(message);
+        } else if (Object.prototype.toString.call(message) === "[object String]") {
+            type = "String";
+        } else if (Object.prototype.toString.call(message) === "[object Number]") {
+            type = "Number";
+            message = JSON.stringify(message);
+        } else if (Object.prototype.toString.call(message) === "[object Boolean]") {
+            type = "Boolean";
+            message = message.toString();
+        } else if (Object.prototype.toString.call(message) === "[object Function]") {
+            type = "Function";
+            message = message.toString();
+        } else if (Object.prototype.toString.call(message) === "[object Object]") {
+            type = "Object";
+            message = JSON.stringify(message);
+        } else {
+            console.error("WizViewMessenger posted unknown type!");
+            return;
+        }
+
+        var iframe = document.createElement('IFRAME');
+        iframe.setAttribute('src', 'wizPostMessage://' + window.encodeURIComponent(window.name) + '?' + window.encodeURIComponent(targetView) + '?' + window.encodeURIComponent(message) + '?' + type);
+        document.documentElement.appendChild(iframe);
+        iframe.parentNode.removeChild(iframe);
+        iframe = null;
+    };
+
+    WizViewMessenger.prototype.__triggerMessageEvent = function (origin, target, data, type) {
+// Trigger message event
+        origin = decodeURIComponent(origin);
+        target = decodeURIComponent(target);
+        data = decodeURIComponent(data);
+
+// Check message type
+        if (type === "Array") {
+            data = JSON.parse(data);
+        } else if (type === "String") {
+// Stringy String String
+        } else if (type === "Number") {
+            data = JSON.parse(data);
+        } else if (type === "Boolean") {
+            data = Boolean(data);
+        } else if (type === "Function") {
+// W3C says nothing about functions, will be returned as string.
+        } else if (type === "Object") {
+            data = JSON.parse(data);
+        } else {
+            console.error("Message Event received unknown type!");
+            return;
+        }
+
+        var event = document.createEvent("HTMLEvents");
+        event.initEvent("message", true, true);
+        event.eventName = "message";
+        event.memo = {};
+        event.origin = origin;
+        event.source = target;
+        event.data = data;
+        dispatchEvent(event);
+    };
+
+    wizViewMessenger = new WizViewMessenger();
+
+
+    urlParams = new URLSearchParams(window.location.search);
+
+    startSeconds = urlParams.get('StartSeconds') - 0.000001;
+    endSeconds = urlParams.get('EndSeconds') - 0.000001;
+    videoId = urlParams.get('VideoId');
+    
+    player = new Twitch.Player(`player`, {
+        width: '100%',
+        height: '100%',
+        layout: 'video',
+        video: videoId,
+        autoplay: false,
+        muted: false
+    });
+
+    player.addEventListener(Twitch.Player.READY, () => {
+        player.disableCaptions();
+        player.seek(startSeconds);
+        player.play();
+
+        setInterval(() => {
+            if (player.getCurrentTime() > endSeconds)
+                player.pause();
+        }, 300)
+    });
+
+    closeWindow = (action) => {
+        let messageObj = {action: action, id: ID};
+        wizViewMessenger.postMessage(messageObj, 'mainView');
+        console.log(`wizViewMessenger sent message`);
+
+        if (action === 'stop') {
+            window.location = defaultUrl;
+        }
+    }
+
+    player.addEventListener(Twitch.Player.PAUSE, () => closeWindow('pause'));
+
+    player.addEventListener(Twitch.Player.ENDED, () => closeWindow('stop'));
+
+    IS_DEBUG = false;
+    ID = -1;
+    defaultUrl = null;
+    setTimeout(() => {
+        if (IS_DEBUG) closeWindow('pause');
+    }, 5000);
+
+
+    function environment(message) {
+        if (message.origin === 'mainView') {
+            console.log(`twitch.html wiz message received`);
+            console.log(message);
+            let data = message.data;
+
+            if (data.action === 'pause') {
+                player.pause();
+                return;
+            }
+
+            if (data.action === 'stop') {
+                player.stop();
+                return;
+            }
+
+            if (data.action === 'play') {
+                if (window.location !== data.url)
+                    window.location = data.url;
+                
+                return;
+            }
+
+            if (data.action === 'ready') {
+                IS_DEBUG = data.IS_DEBUG;
+                ID = data.id;
+                defaultUrl = data.defaultUrl;
+            }
+        }
+    }
+
+    window.addEventListener('message', environment, false);
+
+    window.onload = () => {
+        let messageObj = {action: 'ready'};
+        wizViewMessenger.postMessage(messageObj, 'mainView');
+    };
+</script>
+</body>
+</html>

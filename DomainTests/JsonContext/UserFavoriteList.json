@@ -1,0 +1,32 @@
+[
+  {
+    "Id": 1,
+    "UserId": 2,
+    "FavoriteListId": 1,
+    "Active": true
+  },
+  {
+    "Id": 2,
+    "UserId": 3,
+    "FavoriteListId": 1,
+    "Active": true
+  },
+  {
+    "Id": 3,
+    "UserId": 2,
+    "FavoriteListId": 4,
+    "Active": true
+  },
+  {
+    "Id": 4,
+    "UserId": 4,
+    "FavoriteListId": 3,
+    "Active": true
+  },
+  {
+    "Id": 5,
+    "UserId": 2,
+    "FavoriteListId": 2,
+    "Active": true
+  }
+]

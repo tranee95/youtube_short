@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "Name": "News",
+    "Active": true
+  },
+  {
+    "Id": 2,
+    "Name": "Games",
+    "Active": true
+  },
+  {
+    "Id": 3,
+    "Name": "Cars",
+    "Active": true
+  },
+  {
+    "Id": 4,
+    "Name": "Movies",
+    "Active": true
+  },
+  {
+    "Id": 5,
+    "Name": "Music",
+    "Active": true
+  },
+  {
+    "Id": 6,
+    "Name": "Live",
+    "Active": true
+  },
+  {
+    "Id": 7,
+    "Name": "People",
+    "Active": true
+  },
+  {
+    "Id": 8,
+    "Name": "Other",
+    "Active": true
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "Id": 1,
+    "Login": "tranee95@gmail.com",
+    "Email": "tranee95@gmail.com",
+    "DisplayName": "tranee95@gmail.com",
+    "PasswordHash": "202cb962ac59075b964b07152d234b70",
+    "Avatar": [80, 65, 78, 75, 64, 74],
+    "Active": true,
+    "Role": "user",
+    "Phone": "+79085929000"
+  },
+  {
+    "Id": 2,
+    "Login": "xet58816@cuoly.com",
+    "Email": "xet58816@cuoly.com",
+    "DisplayName": "xet58816@cuoly.com",
+    "PasswordHash": "202cb962ac59075b964b07152d234b70",
+    "Avatar": [ 80, 65, 78, 75, 64, 74 ],
+    "Active": true,
+    "Role": "user",
+    "Phone": ""
+  },
+  {
+    "Id": 3,
+    "Login": "test@gmail.com",
+    "Email": "test@gmail.com",
+    "DisplayName": "test@gmail.com",
+    "PasswordHash": "202cb962ac59075b964b07152d234b70",
+    "Avatar": [ 80, 65, 78, 75, 64, 74 ],
+    "Active": true,
+    "Role": "user",
+    "Phone": ""
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "Id": 1,
+    "Name": "test list 1",
+    "IsDefaultList": false,
+    "Active": true
+  },
+  {
+    "Id": 2,
+    "Name": "test list 2",
+    "IsDefaultList": false,
+    "Active": true
+  },
+  {
+    "Id": 3,
+    "Name": "test list 3",
+    "IsDefaultList": false,
+    "Active": true
+  },
+  {
+    "Id": 4,
+    "Name": "test list 4",
+    "IsDefaultList": false,
+    "Active": true
+  },
+  {
+    "Id": 5,
+    "Name": "test list 5",
+    "IsDefaultList": false,
+    "Active": true
+  }
+]

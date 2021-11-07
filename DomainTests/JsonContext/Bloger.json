@@ -1,0 +1,43 @@
+[
+  {
+    "Id": 1,
+    "Name": "Bloger",
+    "Age": 32,
+    "Url": "test url",
+    "NickName": "Nick Name Bloger",
+    "Subscribers": 1000,
+    "Themes": "[1, 2]",
+    "Active": true
+  },
+  {
+    "Id": 2,
+    "Name": "Beacon",
+    "Age": 33,
+    "Url": "WarpBeacon",
+    "NickName": "https://www.youtube.com/channel/UCPMaKKHTJjzChrjCVx4z4Mg",
+    "Subscribers": 175000,
+    "Themes": "[2]",
+    "Active": true
+  },
+  {
+    "Id": 3,
+    "Name": "Alex",
+    "Age": 27,
+    "Url": "https://www.youtube.com/channel/UC3ptU7hyNeFlJdvQj2nZHJg",
+    "NickName": "Alex007",
+    "Subscribers": 207000,
+    "Themes": "[2, 3]",
+    "Active": true
+  },
+  {
+    "Id": 4,
+    "Name": "Sergey Stilov",
+    "Age": 32,
+    "Url": "https://www.youtube.com/channel/UCKlVcvjUCU2RpBRw864EDGQ",
+    "NickName": "Stilov",
+    "Subscribers": 588000,
+    "Themes": "[3]",
+    "Active": true
+  }
+]
+

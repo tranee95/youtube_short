@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  vitouch:
+    image: ${DOCKER_REGISTRY-}vitouch
+    build:
+      context: ../
+      dockerfile: Dockerfile

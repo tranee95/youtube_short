@@ -1,0 +1,37 @@
+[
+  {
+    "Id": 1,
+    "UserId": 2,
+    "BlogersId": [ 2, 3 ],
+    "ThemesId": [ 5, 6 ],
+    "Active": true
+  },
+  {
+    "Id": 2,
+    "UserId": 1,
+    "BlogersId": [ 1, 3 ],
+    "ThemesId": [ 2, 1 ],
+    "Active": true
+  },
+  {
+    "Id": 3,
+    "UserId": 3,
+    "BlogersId": [ 4, 2 ],
+    "ThemesId": [ 7, 3 ],
+    "Active": true
+  },
+  {
+    "Id": 4,
+    "UserId": 2,
+    "BlogersId": [ 1 ],
+    "ThemesId": [ 5 ],
+    "Active": true
+  },
+  {
+    "Id": 5,
+    "UserId": 1,
+    "BlogersId": [ 3 ],
+    "ThemesId": [ 6 ],
+    "Active": true
+  }
+]
