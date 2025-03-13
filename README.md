@@ -58,7 +58,3 @@ docker run -p 8080:80 <youruser>/vitouch
 * DomainTests - Библиотека классов, тесты команд
 * Service - Библиотека классов, основыне сервисы для работы 
 * viTouch - Основное приложение
-
-### Основые подходы к проекту
-
-viTouch построен по патерну Паттерн Посредник ([CQRS/MediatR](https://docs.microsoft.com/ru-ru/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-application-layer-implementation-web-api)).
